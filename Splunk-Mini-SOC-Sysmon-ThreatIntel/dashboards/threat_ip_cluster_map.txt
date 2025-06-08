@@ -1,0 +1,8 @@
+"description": "# Plots the geographic location of threat IPs on a cluster map, grouped by threat type."
+
+index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3
+| rex field=_raw "<DestinationIp>(?P<dest_ip>.*?)</DestinationIp>"
+| lookup threat_ip_lookup threat_ip as dest_ip OUTPUT threat_type
+| where isnotnull(threat_type)
+| iplocation dest_ip
+| geostats count by threat_type

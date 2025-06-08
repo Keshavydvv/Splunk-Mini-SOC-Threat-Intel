@@ -1,0 +1,9 @@
+"description": "# Displays a bar chart of detected IPs with the number of times each was observed."
+
+
+index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3
+| rex field=_raw "<DestinationIp>(?P<dest_ip>.*?)</DestinationIp>"
+| lookup threat_ip_lookup threat_ip as dest_ip OUTPUT threat_type
+| where isnotnull(threat_type)
+| stats count by dest_ip
+| sort - count

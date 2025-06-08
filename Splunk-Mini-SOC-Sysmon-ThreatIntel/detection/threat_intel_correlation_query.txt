@@ -1,0 +1,8 @@
+# Correlates Sysmon network connection logs (EventCode=3) with known malicious IPs using the threat_ip_lookup table.
+# Extracts destination IPs from raw XML logs using regex and enriches with threat type, source, and severity data.
+
+index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3
+| rex field=_raw "<DestinationIp>(?P<dest_ip>.*?)</DestinationIp>"
+| lookup threat_ip_lookup threat_ip as dest_ip OUTPUT threat_type, source, severity
+| where isnotnull(threat_type)
+| table _time, dest_ip, threat_type, source, severity, Computer

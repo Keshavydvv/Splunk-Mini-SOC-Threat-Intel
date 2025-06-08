@@ -1,0 +1,7 @@
+threat_ip,threat_type,source,severity
+192.168.1.38,TestThreat,Manual,Low
+13.107.5.93,MaliciousContact,TestFeed,High
+51.105.71.136,TestThreat,Manual,Low
+45.155.205.233,Malware,AbuseIPDB,High
+185.220.101.1,Proxy,OTX,Medium
+123.45.67.89,C2,CustomFeed,Critical

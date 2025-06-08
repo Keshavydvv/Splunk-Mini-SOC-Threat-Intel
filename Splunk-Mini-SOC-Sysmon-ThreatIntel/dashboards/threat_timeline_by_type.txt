@@ -1,0 +1,8 @@
+"description": "# Shows a time-based line chart of threats categorized by type over hourly intervals."
+
+
+index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3
+| rex field=_raw "<DestinationIp>(?P<dest_ip>.*?)</DestinationIp>"
+| lookup threat_ip_lookup threat_ip as dest_ip OUTPUT threat_type
+| where isnotnull(threat_type)
+| timechart span=1h count by threat_type

@@ -1,0 +1,9 @@
+"description": "# Shows a table with destination IPs, associated threat type, severity, source, and count of occurrences."
+
+
+index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=3
+| rex field=_raw "<DestinationIp>(?P<dest_ip>.*?)</DestinationIp>"
+| lookup threat_ip_lookup threat_ip as dest_ip OUTPUT threat_type, severity_color, source
+| where isnotnull(threat_type)
+| stats count by dest_ip, threat_type, severity_color, source
+| sort - count
